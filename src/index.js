@@ -4,9 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {io} from "socket.io-client";
+import axios from 'axios';
 
 
-export const socket = io("ws://localhost:8080/", {})
+axios.defaults.baseURL = 'http://localhost:8000/api/'
+axios.defaults.headers["Authorization"] = `Bearer ${localStorage.getItem('token')}`
+
+
+export const socket = io("ws://localhost:8080/", {});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

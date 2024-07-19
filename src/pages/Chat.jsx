@@ -6,8 +6,14 @@ import React, {useEffect, useState} from 'react';
 const Chat = () => {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
+    const [user, setUser]= useState(null)
   
     useEffect(() => {
+        (async () => {
+            const {data} = await axios.get('user')
+            console.log(data)
+            setUser(data)
+        })()
       socket.on('message', (msg) => {
         setMessages(messages => [...messages, msg])
       })
@@ -20,7 +26,7 @@ const Chat = () => {
     const submit = async (e) => {
       e.preventDefault()
   
-      await axios.post('http://localhost:8000/api/message',{
+      await axios.post('message',{
         message
       })
   
@@ -28,8 +34,8 @@ const Chat = () => {
       setMessage('')
     }
     
-    return <div className="row">
-    <div className="col-3 vh-100">
+    return <div class="row">
+    <div class="col-3 vh-100">
     <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary">
   
   <div class="list-group list-group-flush border-bottom scrollarea">
@@ -47,9 +53,9 @@ const Chat = () => {
 </div>
     </div>
 
-    <div className="col-9 border">
+    <div class="col-9 border">
 
-      <div id="head" className="py-3 lh-sm border-bottom">
+      <div id="head" class="py-3 lh-sm border-bottom">
         <strong class="mb-1">Members: Rishi, Preetham Sir</strong>
       </div>
 
