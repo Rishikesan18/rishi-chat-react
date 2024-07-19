@@ -3,34 +3,44 @@ import {socket} from "../index";
 import axios from "axios";
 import {Context} from "../components/Secure";
 import {useParams} from "react-router-dom";
+import Upload from '../components/Upload';
 
 const Chat = () => {
     const {id} = useParams();
     const [user] = useContext(Context);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(false);
+
+    const load = async () => {
+        const {data} = await axios.get(`users/${id}/messages?page=${page}`)
+        setMessages(page === 1 ? data.messages : [...data.messages, ...messages])
+        setLastPage(data.messages.length === 0)
+    }
 
     useEffect(() => {
-        (async () => {
-            const {data} = await axios.get(`users/${id}/messages`)
-            setMessages(data.messages)
+        setPage(1)
+        load()
 
-            socket.on('message', (msg) => {
-                setMessages(messages => [...messages, msg])
-            })
-        })()
+        socket.on('message', (msg) => {
+            setMessages(messages => [...messages, msg])
+        })
+
         return () => {
             socket.off('message')
         }
     }, [id]);
 
+    useEffect(() => {
+        load()
+    }, [page])
+
     const submit = async (e) => {
         e.preventDefault()
 
         await axios.post('messages', {
-            receiver_id: id, 
-            content: message, 
-            type: 'text'
+            receiver_id: id, content: message, type: 'text'
         })
 
         setMessage('')
@@ -42,6 +52,10 @@ const Chat = () => {
         </div>
 
         <div id="conversation">
+            {!lastPage && <div className="text-center py-1">
+                <a href="#" className="alert-link" onClick={() => setPage(page + 1)}>Load more recent</a>
+            </div>}
+
             {messages.map(m => {
                 let html;
 
@@ -64,6 +78,8 @@ const Chat = () => {
 
         <form id="reply" className="p-3 w-100" onSubmit={submit}>
             <div className="input-group">
+                <Upload/>
+
                 <input className="form-control" placeholder="Write a message" onChange={e => setMessage(e.target.value)}/>
             </div>
         </form>
