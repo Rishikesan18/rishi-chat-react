@@ -18,7 +18,7 @@ const Account = () => {
 
     return <main className="form-signin w-100 m-auto">
         <form onSubmit={submit}>
-            <h1 className="h3 mb-3 fw-normal">Please update your account</h1>
+            <h1 className="h3 mb-3 fw-normal">Please Update Your Account</h1>
 
             <div className="mb-3">
                 <label htmlFor="first_name" className="form-label">First Name</label>
