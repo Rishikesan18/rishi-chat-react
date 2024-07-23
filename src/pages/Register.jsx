@@ -13,7 +13,9 @@ const Register = () => {
         await navigate('/login')
     }
 
-    return <main className="form-signin w-100 m-auto">
+    return (
+
+     <main className="form-signin w-100 m-auto">
         <form onSubmit={submit}>
             <h1 className="h3 mb-3 fw-normal">Please Register</h1>
 
@@ -45,6 +47,7 @@ const Register = () => {
             <button className="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
         </form>
     </main>
+    );
 };
 
 export default Register;
